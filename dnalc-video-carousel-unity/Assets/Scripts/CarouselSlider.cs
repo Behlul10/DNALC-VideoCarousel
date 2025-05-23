@@ -5,6 +5,11 @@ using UnityEngine.UI;
 
 public class CarouselSlider : MonoBehaviour
 {
+    //referencing Connection Script from WebSocket
+    //////////////////////////////////////////////////////////////////////
+    public Connection connection;
+    //////////////////////////////////////////////////////////////////////
+
     [Header("Content Vieport")]
     public RawImage contentDisplay;
     public List<GameObject> contentPanels;
@@ -26,11 +31,18 @@ public class CarouselSlider : MonoBehaviour
     public float swipeThreshold = 50f;
     private Vector2 touchStartPos;
 
+
     // Reference to the RectTransform of the content area
     public RectTransform contentArea;
 
     void Start()
     {
+
+        // if you forgot to wire it in the Inspector, find it at runtime:
+        if (connection == null)
+            connection = FindObjectOfType<Connection>();
+        //////////////////////////////////////////////////////////////////////
+
         nextButton.onClick.AddListener(NextContent);
         prevButton.onClick.AddListener(PreviousContent);
 
@@ -94,10 +106,26 @@ public class CarouselSlider : MonoBehaviour
     {
         // Detect swipe input only within the content area
         DetectSwipe();
+
+
+        // 1) handle websocket‐driven commands:
+        if (connection.currentMsg != null)
+        {
+            var state = connection.currentMsg.slideState;
+            Debug.Log("message from Server" + state);
+            if (state == "next")
+                NextContent();
+            else if (state == "previous")
+                PreviousContent();
+
+            // reset so we only fire once per message
+            connection.currentMsg = null;
+        }
     }
 
     void DetectSwipe()
     {
+
         if (Input.GetMouseButtonDown(0))
         {
             touchStartPos = Input.mousePosition;
@@ -127,6 +155,27 @@ public class CarouselSlider : MonoBehaviour
                 }
             }
         }
+
+
+        /*
+        if (msg.slideState == "next")
+        {
+            NextContent();
+        }
+        else if (msg.slideState == "previous")
+        {
+            PreviousContent();
+        }
+        */
+        //if (slidestate == "next"){
+        //     NextContent()
+        //}
+        //if (slidestate == "previous"){
+        //     PreviousContent();
+        //}
+        // else if(slidestate == "null"){
+        //     do nothin
+        //}
     }
 
     // Check if the touch position is within the content area bounds

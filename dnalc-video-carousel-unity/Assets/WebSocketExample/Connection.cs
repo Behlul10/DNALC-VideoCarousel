@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using NativeWebSocket;
+using UnityEditor.VersionControl;
 
-// 1) Define your JSON shape
 [Serializable]
 public class SlideMessage
 {
@@ -26,75 +26,72 @@ public class HandData
 
 public class Connection : MonoBehaviour
 {
-  WebSocket websocket;
+    WebSocket websocket;
 
-  // Start is called before the first frame update
-  async void Start()
-  {
-    // websocket = new WebSocket("ws://echo.websocket.org");
-    //websocket = new WebSocket("ws://172.20.10.1");
+    // store the last‐received message here:
+    [HideInInspector]
+    public SlideMessage currentMsg;
 
-    websocket = new WebSocket("ws://172.20.10.13:8080");
 
-    websocket.OnOpen += () =>
+    async void Start()
     {
-      Debug.Log("Connection open!");
-    };
+        // websocket = new WebSocket("ws://echo.websocket.org");
+        //websocket = new WebSocket("ws://172.20.10.1");
 
-    websocket.OnError += (e) =>
-    {
-      Debug.Log("Error! " + e);
-    };
+        //websocket = new WebSocket("ws://172.20.10.13:8080");  /////
+        websocket = new WebSocket("ws://localhost:8080");
 
-    websocket.OnClose += (e) =>
-    {
-      Debug.Log("Connection closed!");
-    };
+        websocket.OnOpen += () => { Debug.Log("Connection open!"); };
+        websocket.OnError += (e) => { Debug.Log("Error! " + e);};
+        websocket.OnClose += (e) => { Debug.Log("Connection closed!");};
 
-    websocket.OnMessage += (bytes) =>
-    {
-      // Reading a plain text message
-      //var message = System.Text.Encoding.UTF8.GetString(bytes);
-      //Debug.Log("Received OnMessage! (" + bytes.Length + " bytes) " + message);
-      string json = System.Text.Encoding.UTF8.GetString(bytes);
+        websocket.OnMessage += (bytes) =>
+        {
+            // Reading a plain text message
+            //var message = System.Text.Encoding.UTF8.GetString(bytes);
+            //Debug.Log("Received OnMessage! (" + bytes.Length + " bytes) " + message);
+            var json = System.Text.Encoding.UTF8.GetString(bytes);
+            Debug.Log("RAW JSON from server: " + json);
 
-      // parse to your C# type
-      SlideMessage msg = JsonUtility.FromJson<SlideMessage>(json);
-      // now you can read slideState
-      if (msg.slideState == "next" || msg.slideState == "previous")
-      {
-        Debug.Log(msg.slideState);
-      }
+            // parse & store in the public field:
+            currentMsg = JsonUtility.FromJson<SlideMessage>(json);
+            Debug.Log("Received slideState=" + currentMsg.slideState);
+            /*
+            // parse to your C# type
+            SlideMessage msg = JsonUtility.FromJson<SlideMessage>(json);
 
-    };
-    //message slidestate: "next", "previous", "null"
-    // Keep sending messages at every 0.3s
-    //InvokeRepeating("SendWebSocketMessage", 0.0f, 0.3f);
+            // now you can read slideState
+            if (msg.slideState == "next" || msg.slideState == "previous")
+            {
+                Debug.Log("Received OnMessage!" + msg.slideState);
+            }*/
 
-    await websocket.Connect();
+        };
+        //message slidestate: "next", "previous", "null"
+        // Keep sending messages at every 0.3s
+        //InvokeRepeating("SendWebSocketMessage", 0.0f, 0.3f);
+
+        await websocket.Connect();
   }
-
-  void Update()
-  {
-    #if !UNITY_WEBGL || UNITY_EDITOR
-      websocket.DispatchMessageQueue();
-    #endif
-  }
-
-  async void SendWebSocketMessage()
-  {
-    if (websocket.State == WebSocketState.Open)
+    void Update()
     {
-      // Sending bytes
-      await websocket.Send(new byte[] { 10, 20, 30 });
-
-      // Sending plain text
-      await websocket.SendText("plain text message");
+        #if !UNITY_WEBGL || UNITY_EDITOR
+        websocket.DispatchMessageQueue();
+        #endif
     }
-  }
 
-  private async void OnApplicationQuit()
-  {
-    await websocket.Close();
-  }
+    async void SendWebSocketMessage()
+    {
+        if (websocket.State == WebSocketState.Open)
+        {
+            // Sending bytes
+            await websocket.Send(new byte[] { 10, 20, 30 });
+            // Sending plain text
+            await websocket.SendText("plain text message");
+        }
+    }
+    private async void OnApplicationQuit()
+    {
+        await websocket.Close();
+    }
 }

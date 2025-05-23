@@ -1203,6 +1203,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 822911313}
   m_CullTransparentMesh: 1
+--- !u!1 &1046817586
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1046817587}
+  - component: {fileID: 1046817588}
+  m_Layer: 0
+  m_Name: websocket connection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1046817587
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046817586}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4737.999, y: 1040, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1046817588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046817586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f451fab1e6d94aea8fb73803e281bb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentMsg:
+    rightHand:
+      isClosed: 0
+      x: 0
+      y: 0
+    slideState: 
+    timestamp: 0
 --- !u!1 &1197077353
 GameObject:
   m_ObjectHideFlags: 0
@@ -1676,6 +1727,7 @@ GameObject:
   - component: {fileID: 2046979085}
   - component: {fileID: 2046979084}
   - component: {fileID: 2046979087}
+  - component: {fileID: 2046979088}
   m_Layer: 5
   m_Name: Content Carousel
   m_TagString: Untagged
@@ -1781,7 +1833,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2046979082}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26172e24179070e43a5a577b0be300bd, type: 3}
   m_Name: 
@@ -1811,6 +1863,31 @@ MonoBehaviour:
   totalPages: 0
   currentIndex: 0
   gridLayoutGroup: {fileID: 541274819}
+--- !u!114 &2046979088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046979082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fada657ab9146644cbe84b254a67d589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connection: {fileID: 1046817588}
+  contentDisplay: {fileID: 0}
+  contentPanels: []
+  dotsContainer: {fileID: 0}
+  dotPrefab: {fileID: 0}
+  nextButton: {fileID: 0}
+  prevButton: {fileID: 0}
+  useTimer: 0
+  isLimitedSwipe: 0
+  autoMoveTime: 5
+  currentIndex: 0
+  swipeThreshold: 50
+  contentArea: {fileID: 0}
 --- !u!1 &2084266940
 GameObject:
   m_ObjectHideFlags: 0
@@ -2023,3 +2100,4 @@ SceneRoots:
   - {fileID: 2084266944}
   - {fileID: 347144762}
   - {fileID: 1816502250}
+  - {fileID: 1046817587}
